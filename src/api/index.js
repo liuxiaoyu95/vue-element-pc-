@@ -1,5 +1,4 @@
 import axios from 'axios'
-//import store from '@/store'
 import * as cookie from './token-headers'
 
 // 创建axios实例
@@ -14,15 +13,13 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
   let token = cookie.getToken();
-  /*if(store.getters.token) {
-        config.headers['token'] = getToken() // 让每个请求携带token--['token']为自定义key 请根据实际情况自行修改
-    }*/
+  // 让每个请求携带token--['token']为自定义key 请根据实际情况自行修改
   if (token) {
     config.headers['token'] = token;
   }
   return config;
 }, error => {
-  Promise.reject(error);
+  return Promise.reject(error);
 })
 
 // respone拦截器

@@ -18,23 +18,31 @@ let router = new Router({
   routes: routerLink
 })
 
-
+window.localStorage.setItem('loginOk', 'true');
 //全局守卫,页面加载的时候,监控路由是否相同
 router.beforeEach((to, from, next) => {
-  // 使用过程为, 先判断vuex里面一条数据, 判断是否登陆
-  next()
-  //判断是否结合store进行登录管理
-  // if (to.path === '/page' || to.path === '/') {
-  //   next();//进行登陆,直接渲染界面
-  // } else {
-  //   alert('还没有登陆哦')
-  // }
-
+  console.log('to.meta.requireAuth',to);
+  console.log('from.meta.requireAuth',from);
+  if (to.meta.requireAuth) {
+    let token = localStorage.getItem('token')
+    if (token) {
+      next()
+    } else {
+      next({
+        path: '/login',
+        query: {
+          redirect: to.fullPath    // 将跳转的路由path作为参数，登录成功后跳转到该路由
+        }
+      })
+    }
+  } else {
+    next()
+  }
 });
 
 //后置钩子,进入组件之后会调用钩子函数
 router.afterEach((to, from) => {
-  alert('进入路由组件完成阶段的后置钩子');
+  console.log('进入路由组件完成阶段的后置钩子');
 })
 
 export default router

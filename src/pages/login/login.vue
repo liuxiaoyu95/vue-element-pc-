@@ -1,23 +1,35 @@
 <template>
   <div id="login">
-    {{login | numTostring}}
-    <el-button round @click='api'>数据请求</el-button>
-    <el-button round @click='mock'>mock数据渲染</el-button>
+    {{login | cutStrByLength(3)}}
+    <el-button round @click='api'>登录(数据请求)</el-button>
+    <el-button round @click='mock'>数据渲染</el-button>
+    <table>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+      </tr>
+      <tr v-for="item,index in userData" :key="index">
+        <td>{{index}}</td>
+        <td>{{item.name}}</td>
+      </tr>
+      <tr v-if="userData.length === 0">
+        <td>暂无数据</td>
+      </tr>
+    </table>
   </div>
 </template>
 <script>
-  //引入书写好的api文件
+  import '@/assets/css/base.css';
   import {login} from '@/api/modules/login';
   import Mock from 'mockjs';
-  //引入过滤器处理数据
-  import {numTostring} from '../../filters/index';
 
   export default {
     name: 'login',
     data() {
       return {
         list: '',
-        login: "登录界面"
+        login: "登录界面",
+        userData: []
       };
     },
     methods: {
@@ -37,24 +49,26 @@
               title: '请求',
               message: '数据请求成功!',
               type: 'success',
-              offset: 100,
+              offset: 80,
               duration: '3000'
             });
+            this.$router.push({name:'index'})
             console.log(response);
           }, err => {
             console.log('请求失败');
           });
       },
       mock(){
-        const cc = Mock.mock({
-          'cc|1-39':[
+        const lxy_data = Mock.mock({
+          'lxy_data|1-39':[
             {
-              'age':'@cname'
+              'name':'@cname'
             }
           ]
         })
+        this.userData = lxy_data.lxy_data
         console.log(Mock.mock('@now'));
-        console.log(cc);
+        console.log(lxy_data);
       }
     },
     mounted() {
@@ -62,9 +76,8 @@
     }
   };
 </script>
-
 <style lang='less' scoped>
-  @color: #ccc;
+  @color: pink;
   #login {
     background-color: @color;
   }

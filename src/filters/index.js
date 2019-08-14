@@ -1,7 +1,12 @@
-import Vue from 'vue';
+const vfilter = {
+  cutStrByLength: function (value, length) {
+    console.log(value);
+    value = value.substr(0, length);
+    return value
+  },
+  toFixed: function () {
 
-export const numTostring = Vue.filter('numTostring', function (value) {
-  console.log(value);
-  value = value.substr(0, 2);
-  return value
-})
+  }
+}
+
+export default vfilter
